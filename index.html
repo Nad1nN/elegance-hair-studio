@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111310">
+<meta name="description" content="Studio Noir – Demo eines modernen Friseursalons. Haarschnitte, Coloration und Haarpflege.">
+<title>STUDIO NOIR | Dein Haar. Dein Stil.</title>
+<style>
+:root{--bg:#111310;--surface:#1b1e19;--text:#f5f1e8;--muted:#b4b7aa;--gold:#d9bc83;--line:#353a30}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:95px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.6}
+body.modal-open{overflow:hidden}
+a{color:inherit;text-decoration:none}
+button,input,select{font:inherit}
+button{cursor:pointer}
+img{display:block;width:100%;object-fit:cover;background:var(--surface)}
+::selection{background:var(--gold);color:var(--bg)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
+.container{width:min(1180px,90%);margin-inline:auto}
+.eyebrow{color:var(--gold);font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:14px 24px;border:1px solid var(--gold);border-radius:100px;background:var(--gold);color:var(--bg);font-weight:700;transition:.2s}
+.btn:hover{background:#ead0a0;transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--text);border-color:#686c60}
+.btn-outline:hover{background:var(--surface)}
+.skip{position:absolute;top:-100px;left:15px;z-index:100;background:var(--gold);color:var(--bg);padding:12px}
+.skip:focus{top:15px}
+header{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:rgba(17,19,16,.96);backdrop-filter:blur(16px)}
+.nav{min-height:84px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{font-size:23px;font-weight:800;letter-spacing:3px}
+.brand span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:24px;font-size:14px}
+.nav-links a:hover{color:var(--gold)}
+.menu-toggle{display:none;border:1px solid var(--line);background:transparent;color:var(--text);border-radius:10px;padding:9px 13px}
+.hero{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:60px;padding-block:65px 90px}
+h1,h2,h3,p{margin-top:0}
+h1,h2{font-family:Georgia,"Times New Roman",serif;font-weight:400}
+h1{font-size:clamp(52px,6vw,82px);line-height:1.06;margin-block:22px;letter-spacing:-3px}
+h1 em,h2 em{color:var(--gold)}
+.hero-copy>p{max-width:440px;color:var(--muted);font-size:17px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-block:30px}
+.hero-note{color:var(--muted);font-size:13px}
+.hero-note span{color:var(--gold);margin-right:8px}
+.hero-visual{position:relative;padding-bottom:26px}
+.hero-photo{height:580px;border-radius:180px 180px 24px 24px;filter:brightness(.83)}
+.photo-caption{position:absolute;left:-20px;bottom:0;padding:23px 28px;background:var(--gold);border-radius:18px;color:var(--bg);max-width:310px}
+.photo-caption strong{font-family:Georgia,serif;font-size:24px;font-weight:400}
+.photo-caption p{margin:5px 0 0;font-size:13px}
+.ticker{border-block:1px solid var(--line);padding:23px 0;background:#171a15}
+.ticker-inner{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.ticker span{color:var(--muted);font-size:12px;letter-spacing:2px}
+.ticker b{color:var(--gold);margin-right:10px}
+section{padding-block:85px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:36px}
+h2{font-size:clamp(36px,4.5vw,55px);line-height:1.15;margin:14px 0 0;letter-spacing:-1.5px}
+.section-head>p{max-width:330px;margin:0;color:var(--muted)}
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.service{padding:30px;background:var(--surface);border:1px solid var(--line);border-radius:24px;transition:.25s}
+.service:hover{transform:translateY(-5px);border-color:var(--gold)}
+.service-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}
+.service-icon{color:var(--gold);font-size:33px}
+.service-number{color:var(--muted);font-size:12px}
+h3{font-size:22px;line-height:1.3;margin-bottom:12px}
+.service p{color:var(--muted);font-size:14px}
+.service button{background:none;border:0;padding:0;color:var(--gold);font-size:14px}
+.about{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:65px}
+.about-photo{height:500px;border-radius:24px}
+.about-copy>p{color:var(--muted);margin-top:25px}
+.features{margin:26px 0;padding:0;list-style:none}
+.features li{padding:11px 0;border-bottom:1px solid var(--line)}
+.features span{color:var(--gold);margin-right:12px}
+.price-section{background:#181b16;border-block:1px solid var(--line)}
+.prices{display:grid;grid-template-columns:1fr 1fr;gap:0 60px}
+.price-row{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:21px 0;border-bottom:1px solid var(--line)}
+.price-row strong{color:var(--gold);white-space:nowrap}
+.price-row small{display:block;color:var(--muted);margin-top:3px}
+.price-note{color:var(--muted);font-size:13px;margin:24px 0 0}
+.gallery{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:18px}
+.gallery figure{position:relative;margin:0;overflow:hidden;border-radius:20px}
+.gallery img{height:360px;transition:.5s;filter:brightness(.85)}
+.gallery figure:hover img{transform:scale(1.06)}
+.gallery figcaption{position:absolute;bottom:0;left:0;right:0;padding:45px 20px 20px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:14px}
+.booking-banner{display:flex;align-items:center;justify-content:space-between;gap:30px;background:var(--gold);color:var(--bg);border-radius:28px;padding:45px;margin-top:65px}
+.booking-banner h2{margin:0 0 10px;font-size:42px}
+.booking-banner p{margin:0}
+.booking-banner .btn{background:var(--bg);color:var(--text);border-color:var(--bg);flex-shrink:0}
+.contact{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:40px}
+.contact p{color:var(--muted)}
+.contact h3{font-size:17px}
+.contact a:hover{color:var(--gold)}
+.contact .brand{display:inline-block;margin-bottom:20px}
+.contact small{color:var(--gold)}
+footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:12px}
+.footer-inner{display:flex;justify-content:space-between;gap:20px}
+dialog{width:min(560px,92%);max-height:90dvh;overflow-y:auto;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:24px;padding:30px}
+dialog::backdrop{background:rgba(0,0,0,.75);backdrop-filter:blur(6px)}
+.dialog-head{display:flex;justify-content:space-between;align-items:center;gap:15px}
+.dialog-head h2{margin:0;font-size:34px}
+.close{background:transparent;color:var(--text);border:1px solid var(--line);border-radius:50%;width:38px;height:38px;font-size:24px;flex-shrink:0}
+.dialog-description{color:var(--muted);font-size:14px;margin-top:18px}
+label{display:block;margin:16px 0 6px;font-size:14px}
+input,select{width:100%;padding:12px;color:var(--text);background:var(--bg);border:1px solid #555d4d;border-radius:10px;color-scheme:dark}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+form .btn{width:100%;margin-top:24px}
+.form-note{font-size:12px;color:var(--muted)}
+.form-status{margin:18px 0 0;color:var(--gold)}
+.form-status:empty{display:none}
+@media(max-width:950px){
+.nav-links{gap:14px}
+.hero{gap:30px}
+.hero-photo{height:500px}
+.service{padding:24px}
+.about{gap:35px}
+}
+@media(max-width:760px){
+.nav{min-height:72px}
+.brand{font-size:20px}
+.menu-toggle{display:block}
+.nav-links{display:none;position:absolute;top:72px;left:0;right:0;padding:24px 5%;background:var(--bg);border-bottom:1px solid var(--line);align-items:stretch;flex-direction:column;gap:20px}
+.nav-links.open{display:flex}
+.hero{grid-template-columns:1fr;padding-block:45px 65px;gap:35px}
+.hero-photo{height:440px;border-radius:130px 130px 24px 24px}
+.photo-caption{left:15px}
+.ticker-inner{justify-content:center}
+.ticker span{font-size:10px;letter-spacing:1px}
+section{padding-block:60px}
+.section-head{align-items:start;flex-direction:column;gap:20px}
+.services,.about,.prices,.contact,.gallery{grid-template-columns:1fr}
+.about-photo{height:360px}
+.gallery img{height:340px}
+.booking-banner{flex-direction:column;align-items:start;padding:30px;margin-top:45px}
+.booking-banner h2{font-size:36px}
+.footer-inner{flex-direction:column;gap:5px}
+.form-grid{grid-template-columns:1fr;gap:0}
+dialog{padding:24px}
+}
+@media(prefers-reduced-motion:reduce){
+html{scroll-behavior:auto}
+*,*::before,*::after{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Zum Inhalt springen</a>
+
+<header>
+<nav class="nav container" aria-label="Hauptnavigation">
+<a href="#" class="brand" aria-label="Studio Noir – Startseite">STUDIO<span> NOIR.</span></a>
+<button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Menü öffnen">☰</button>
+<div class="nav-links" id="navLinks">
+<a href="#leistungen">Leistungen</a>
+<a href="#ueber-uns">Über uns</a>
+<a href="#preise">Preise</a>
+<a href="#galerie">Galerie</a>
+<button class="btn" data-book>Termin buchen ↗</button>
+</div>
+</nav>
+</header>
+
+<main id="main">
+<div class="hero container">
+<div class="hero-copy">
+<span class="eyebrow">Friseursalon · Demo-Konzept</span>
+<h1>Dein Haar.<br>Dein Stil.<br><em>Dein Moment.</em></h1>
+<p>Von einer kleinen Veränderung bis zu einem völlig neuen Look. Entdecke eine Frisur, die zu deinem Alltag passt und deine Persönlichkeit unterstreicht.</p>
+<div class="hero-actions">
+<button class="btn" data-book>Deinen Termin buchen ↗</button>
+<a class="btn btn-outline" href="#leistungen">Leistungen entdecken</a>
+</div>
+<div class="hero-note"><span aria-hidden="true">✦</span> Guter Stil beginnt mit einem Gespräch.</div>
+</div>
+<div class="hero-visual">
+<img class="hero-photo" src="https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=1100&q=85" alt="Haarstyling in einem Friseursalon" fetchpriority="high">
+<div class="photo-caption">
+<strong>Mehr als ein neuer Look.</strong>
+<p>Ein Moment nur für dich.</p>
+</div>
+</div>
+</div>
+
+<div class="ticker">
+<div class="container ticker-inner">
+<span><b>✦</b> PRÄZISE HAARSCHNITTE</span>
+<span><b>✦</b> FARBE MIT CHARAKTER</span>
+<span><b>✦</b> INDIVIDUELLE PFLEGE</span>
+<span><b>✦</b> DEIN PERSÖNLICHER STIL</span>
+</div>
+</div>
+
+<section id="leistungen" class="container">
+<div class="section-head">
+<div><span class="eyebrow">Unsere Leistungen</span><h2>Kleine Veränderung.<br><em>Großes Gefühl.</em></h2></div>
+<p>Ein frischer Schnitt, eine neue Farbe oder intensive Pflege. Jeder Look beginnt mit deiner Idee.</p>
+</div>
+<div class="services">
+<article class="service">
+<div class="service-top"><span class="service-icon" aria-hidden="true">✂</span><span class="service-number">01 / SCHNITT</span></div>
+<h3>Haarschnitt & Styling</h3>
+<p>Klare Linien, sanfte Stufen oder eine mutige Veränderung. Ein Schnitt, der zu deinem Haar und deinem Alltag passt.</p>
+<button data-book data-service="Damenhaarschnitt">Haarschnitt auswählen ↗</button>
+</article>
+<article class="service">
+<div class="service-top"><span class="service-icon" aria-hidden="true">◈</span><span class="service-number">02 / FARBE</span></div>
+<h3>Coloration & Balayage</h3>
+<p>Von natürlichen Nuancen bis zu ausdrucksstarken Farben. Frische deinen Look auf oder entdecke eine neue Facette.</p>
+<button data-book data-service="Coloration">Coloration auswählen ↗</button>
+</article>
+<article class="service">
+<div class="service-top"><span class="service-icon" aria-hidden="true">✧</span><span class="service-number">03 / PFLEGE</span></div>
+<h3>Pflege & Regeneration</h3>
+<p>Zusätzliche Aufmerksamkeit für dein Haar. Individuelle Pflege für Geschmeidigkeit, Glanz und leichteres Styling.</p>
+<button data-book data-service="Pflegebehandlung">Haarpflege auswählen ↗</button>
+</article>
+</div>
+</section>
+
+<section id="ueber-uns" class="container about">
+<img class="about-photo" src="https://images.unsplash.com/photo-1600948836101-f9ffda59d250?auto=format&fit=crop&w=1000&q=85" alt="Einladender Innenraum eines Friseursalons" loading="lazy">
+<div class="about-copy">
+<span class="eyebrow">Unsere Philosophie</span>
+<h2>Raum für dein Haar.<br><em>Zeit für dich.</em></h2>
+<p>Studio Noir ist das Konzept eines Salons, in dem wir deinen Stil gemeinsam entwickeln. Deine Wünsche, deine Gewohnheiten und dein Haar stehen am Anfang jedes neuen Looks.</p>
+<ul class="features">
+<li><span aria-hidden="true">✦</span> Individuelle Beratung für deinen Stil</li>
+<li><span aria-hidden="true">✦</span> Pflegetipps für deinen Alltag</li>
+<li><span aria-hidden="true">✦</span> Entspannte Atmosphäre und Zeit für dich</li>
+</ul>
+<a href="#kontakt" class="btn btn-outline">Deinen Salon entdecken ↗</a>
+</div>
+</section>
+
+<section id="preise" class="price-section">
+<div class="container">
+<div class="section-head">
+<div><span class="eyebrow">Demo-Preisliste</span><h2>Dein neuer Look.<br><em>Deine klare Wahl.</em></h2></div>
+<p>Beispielleistungen und Einstiegspreise. Wähle deine Behandlung für eine Demo-Buchung.</p>
+</div>
+<div class="prices">
+<div class="price-row"><div>Damenhaarschnitt<small>Waschen, Schneiden und Styling</small></div><strong>ab 30 €</strong></div>
+<div class="price-row"><div>Herrenhaarschnitt<small>Haarschnitt und Styling</small></div><strong>ab 18 €</strong></div>
+<div class="price-row"><div>Coloration<small>Farbauffrischung oder ein neuer Farbton</small></div><strong>ab 45 €</strong></div>
+<div class="price-row"><div>Balayage<small>Aufhellung mit natürlichen Übergängen</small></div><strong>ab 85 €</strong></div>
+<div class="price-row"><div>Föhnstyling<small>Glatt, voluminös oder sanfte Wellen</small></div><strong>ab 20 €</strong></div>
+<div class="price-row"><div>Pflegebehandlung<small>Pflege passend zu deinem Haar</small></div><strong>ab 25 €</strong></div>
+</div>
+<p class="price-note">Alle Preise sind Demo-Beispiele. Der endgültige Preis richtet sich nach Haarlänge und Behandlungsumfang.</p>
+</div>
+</section>
+
+<section id="galerie" class="container">
+<div class="section-head">
+<div><span class="eyebrow">Inspiration</span><h2>Neue Ideen für<br><em>deinen nächsten Look.</em></h2></div>
+<p>Atmosphäre, Texturen und Details. Illustrative Fotos für dieses Demo-Konzept.</p>
+</div>
+<div class="gallery">
+<figure>
+<img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=800&q=80" alt="Sorgfältiges Haarstyling" loading="lazy">
+<figcaption>Liebe zum Detail</figcaption>
+</figure>
+<figure>
+<img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=800&q=80" alt="Stylingbereich eines Friseursalons" loading="lazy">
+<figcaption>Platz für einen neuen Look</figcaption>
+</figure>
+<figure>
+<img src="https://images.unsplash.com/photo-1600948836101-f9ffda59d250?auto=format&fit=crop&w=800&q=80" alt="Atmosphäre im Salon" loading="lazy">
+<figcaption>Dein Moment zum Abschalten</figcaption>
+</figure>
+</div>
+<div class="booking-banner">
+<div><h2>Zeit für dich.</h2><p>Dein neuer Look beginnt mit einem Klick.</p></div>
+<button class="btn" data-book>Termin auswählen ↗</button>
+</div>
+</section>
+
+<section id="kontakt" class="container contact">
+<div>
+<a href="#" class="brand">STUDIO<span> NOIR.</span></a>
+<p>Haar mit Charakter.<br>Ein Stil, der zu dir gehört.</p>
+<small>Demo-Salon – alle Kontaktdaten sind fiktive Beispiele.</small>
+</div>
+<div>
+<h3>Kontakt</h3>
+<p>Musterstraße 12<br>10115 Berlin</p>
+<p>E-Mail: <a href="mailto:salon@example.com">salon@example.com</a></p>
+</div>
+<div>
+<h3>Öffnungszeiten</h3>
+<p>Montag – Freitag: 09:00 – 19:00 Uhr<br>Samstag: 09:00 – 14:00 Uhr<br>Sonntag: geschlossen</p>
+<button class="btn btn-outline" data-book>Termin buchen ↗</button>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="container footer-inner">
+<span>© <span id="year"></span> Studio Noir · Demo-Website</span>
+<span>Dein Haar. Dein Stil. Dein Moment.</span>
+</div>
+</footer>
+
+<dialog id="bookingDialog" aria-labelledby="bookingTitle" aria-describedby="bookingDescription">
+<div class="dialog-head">
+<h2 id="bookingTitle">Dein nächster Termin.</h2>
+<button class="close" id="closeDialog" aria-label="Buchung schließen">×</button>
+</div>
+<p class="dialog-description" id="bookingDescription">Teste eine Demo-Buchung. Deine Angaben werden nur in diesem Browser gespeichert und nicht an einen Salon gesendet. Die angezeigten Zeiten sind keine echten verfügbaren Termine.</p>
+<form id="bookingForm">
+<label for="name">Vor- und Nachname</label>
+<input id="name" name="name" placeholder="Dein Name" autocomplete="name" minlength="2" maxlength="100" required>
+<div class="form-grid">
+<div>
+<label for="email">E-Mail-Adresse</label>
+<input id="email" name="email" type="email" placeholder="name@example.com" autocomplete="email" required>
+</div>
+<div>
+<label for="phone">Telefonnummer</label>
+<input id="phone" name="phone" type="tel" placeholder="+49 …" autocomplete="tel" maxlength="30" required>
+</div>
+</div>
+<label for="service">Behandlung</label>
+<select id="service" name="service" required>
+<option value="">Behandlung auswählen</option>
+<option>Damenhaarschnitt</option>
+<option>Herrenhaarschnitt</option>
+<option>Coloration</option>
+<option>Balayage</option>
+<option>Föhnstyling</option>
+<option>Pflegebehandlung</option>
+</select>
+<div class="form-grid">
+<div>
+<label for="date">Datum</label>
+<input id="date" name="date" type="date" required>
+</div>
+<div>
+<label for="time">Uhrzeit</label>
+<select id="time" name="time" required><option value="">Zuerst Datum auswählen</option></select>
+</div>
+</div>
+<button type="submit" class="btn">Demo-Buchung speichern ↗</button>
+<p class="form-note">Bitte verwende zum Testen erfundene Angaben.</p>
+<p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
+</form>
+</dialog>
+
+<script>
+const menuToggle = document.getElementById("menuToggle");
+const navLinks = document.getElementById("navLinks");
+const dialog = document.getElementById("bookingDialog");
+const form = document.getElementById("bookingForm");
+const dateInput = document.getElementById("date");
+const timeInput = document.getElementById("time");
+const serviceInput = document.getElementById("service");
+const status = document.getElementById("formStatus");
+let lastTrigger = null;
+
+document.getElementById("year").textContent = new Date().getFullYear();
+
+function localDate(date) {
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
+}
+
+function closeMenu() {
+  navLinks.classList.remove("open");
+  menuToggle.setAttribute("aria-expanded","false");
+  menuToggle.setAttribute("aria-label","Menü öffnen");
+}
+
+menuToggle.addEventListener("click", () => {
+  const open = navLinks.classList.toggle("open");
+  menuToggle.setAttribute("aria-expanded",String(open));
+  menuToggle.setAttribute("aria-label",open ? "Menü schließen" : "Menü öffnen");
+});
+
+navLinks.querySelectorAll("a").forEach(link => link.addEventListener("click",closeMenu));
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") closeMenu();
+});
+
+function updateTimes() {
+  const previousTime = timeInput.value;
+  timeInput.replaceChildren(new Option("Uhrzeit auswählen",""));
+  dateInput.setCustomValidity("");
+
+  if (!dateInput.value) {
+    timeInput.replaceChildren(new Option("Zuerst Datum auswählen",""));
+    return;
+  }
+
+  const selectedDate = new Date(`${dateInput.value}T00:00:00`);
+  const day = selectedDate.getDay();
+
+  if (day === 0) {
+    dateInput.setCustomValidity("Sonntags ist der Salon geschlossen. Bitte wähle ein anderes Datum.");
+    timeInput.replaceChildren(new Option("Sonntags geschlossen",""));
+    return;
+  }
+
+  const closingHour = day === 6 ? 14 : 19;
+  const now = new Date();
+
+  for (let hour = 9; hour < closingHour; hour++) {
+    const time = `${String(hour).padStart(2,"0")}:00`;
+    if (new Date(`${dateInput.value}T${time}`) > now) {
+      timeInput.add(new Option(`${time} Uhr`,time));
+    }
+  }
+
+  if (timeInput.options.length === 1) {
+    dateInput.setCustomValidity("Für diesen Tag gibt es keine weiteren Demo-Zeiten. Bitte wähle einen anderen Tag.");
+    timeInput.options[0].textContent = "Anderes Datum auswählen";
+  }
+
+  if ([...timeInput.options].some(option => option.value === previousTime)) {
+    timeInput.value = previousTime;
+  }
+}
+
+dateInput.addEventListener("change", () => {
+  status.textContent = "";
+  updateTimes();
+});
+
+document.querySelectorAll("[data-book]").forEach(button => {
+  button.addEventListener("click", () => {
+    lastTrigger = button;
+    closeMenu();
+    status.textContent = "";
+    dateInput.min = localDate(new Date());
+    if (button.dataset.service) serviceInput.value = button.dataset.service;
+    updateTimes();
+    dialog.showModal();
+    document.body.classList.add("modal-open");
+  });
+});
+
+document.getElementById("closeDialog").addEventListener("click", () => dialog.close());
+
+dialog.addEventListener("click", event => {
+  const rect = dialog.getBoundingClientRect();
+  const outside = event.clientX < rect.left || event.clientX > rect.right ||
+                  event.clientY < rect.top || event.clientY > rect.bottom;
+  if (event.target === dialog && outside) dialog.close();
+});
+
+dialog.addEventListener("close", () => {
+  document.body.classList.remove("modal-open");
+  if (lastTrigger && lastTrigger.getClientRects().length) lastTrigger.focus();
+});
+
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  dateInput.min = localDate(new Date());
+  updateTimes();
+  if (!form.reportValidity()) return;
+
+  const data = Object.fromEntries(new FormData(form).entries());
+
+  if (data.name.trim().length < 2 || !data.phone.trim()) {
+    status.textContent = "Bitte gib deinen Namen und deine Telefonnummer ein.";
+    return;
+  }
+
+  const appointment = new Date(`${data.date}T${data.time}`);
+  if (appointment <= new Date()) {
+    status.textContent = "Bitte wähle einen Termin in der Zukunft.";
+    return;
+  }
+
+  try {
+    const key = "studio-noir-demo-bookings";
+    const stored = JSON.parse(localStorage.getItem(key) || "[]");
+    const bookings = Array.isArray(stored) ? stored : [];
+    bookings.push({...data,name:data.name.trim(),createdAt:new Date().toISOString()});
+    localStorage.setItem(key,JSON.stringify(bookings));
+
+    status.textContent =
+      `Demo-Buchung gespeichert: ${data.service} am ${appointment.toLocaleDateString("de-DE")} um ${data.time} Uhr. Die Buchung wurde nicht an einen Salon gesendet.`;
+
+    form.reset();
+    updateTimes();
+  } catch {
+    status.textContent = "Die Demo-Buchung konnte nicht gespeichert werden. Bitte prüfe, ob dein Browser die lokale Speicherung erlaubt.";
+  }
+});
+</script>
+</body>
+</html>
